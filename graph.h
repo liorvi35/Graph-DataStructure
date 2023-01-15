@@ -25,5 +25,9 @@ void shortsPath_cmd(pnode head);
 void TSP_cmd(pnode head);
 
 void addEdge(pnode head , int src , int dest , int weight);
+void delete_edges(pnode *head , int ver);
+void removeEdge(pnode node,int node_id);
+void removeFirstEdge(pnode node);
+
 
 #endif
