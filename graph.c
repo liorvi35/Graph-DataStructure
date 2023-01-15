@@ -173,56 +173,67 @@ void insert_node_cmd(pnode *head , int vertice)
 
 void delete_node_cmd(pnode *head , int vertice)
 {
-    printf("in delete\n");
-    pnode currNode = *head, nodeTmp = NULL;
-    pedge currEdge = NULL, edgeTmp = NULL;
-    int exist = 0;
-    if(currNode->node_num == vertice)
+    delete_edges(head , vertice);
+    node *current = *head;
+    node **prev = head;
+    int found = 0;
+    while (current != NULL && found == 0)
     {
-        currEdge = currNode->edges;
-        while (currEdge != NULL)
-        {
-            edgeTmp = currEdge;
-            currEdge = currEdge->next;
-            free(edgeTmp); 
+        if (current -> node_num == vertice) {
+            *prev = current -> next;
+            found = 1;
         }
-        currNode->edges = NULL;
-        nodeTmp = currNode;
-        currNode = currNode->next;
-        free(nodeTmp);
-        *head = currNode;
-    }
-    else
-    {
-        while(currNode->next != NULL)
-        {
-            if(currNode->next->node_num == vertice)
-            {
-                exist = 1;
-                break;
-            }
-            currNode = currNode->next;
+        else {
+            prev = &(current->next);
+            current = current->next;
         }
     }
+    if(current != NULL) {
+        while (current->edges != NULL)
+            removeFirstEdge(current);
+        free(current);
+    }
+}
 
-    printf("exist is: %d\n" , exist);
-    printf("currNode is: %d\n" , currNode->node_num);
-    printf("next node is: %d\n" , currNode->next->node_num);
 
-
-    if(exist)
+void delete_edges(pnode *head , int ver)
+{
+    pnode currNode = *head;
+    while (currNode != NULL)
     {
-        currEdge = currNode->next->edges;
-        while (currEdge != NULL)
-        {
-            edgeTmp = currEdge;
-            currEdge = currEdge->next;
-            free(edgeTmp); 
-        }
-        currNode->edges = NULL;
-        nodeTmp = currNode;
+        removeEdge(currNode , ver);
         currNode = currNode->next;
-        nodeTmp->next = currNode->next;
-        free(nodeTmp);
+    }
+    
+
+}
+
+
+
+void removeEdge(pnode node,int node_id){
+    edge *newEdge = (node->edges);
+    edge **prev = &(node->edges);
+    int found = 0;
+    while(newEdge != NULL && found == 0)
+    {
+        if(newEdge -> endpoint -> node_num == node_id){
+            *prev = newEdge->next;
+            found = 1;
+        }
+        else{
+            prev = &(newEdge->next);
+            newEdge = newEdge -> next;
+        };
+    }
+    if(found==1){
+        free(newEdge);
+    }
+}
+
+void removeFirstEdge(pnode node){
+    edge *newEdge = (node->edges);
+    if(newEdge != NULL){
+        node -> edges = newEdge -> next;
+        free(newEdge);
     }
 }
