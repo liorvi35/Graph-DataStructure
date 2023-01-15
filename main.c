@@ -33,15 +33,17 @@ int main()
         if(ch == 'A')
         {
             printf("in if number 1\n");
-            //deleteGraph_cmd(&head);
+            deleteGraph_cmd(&head);
             scanf("%d" , &nodes);
             printf("nodes is: %d\n" , nodes);
             build_graph_cmd(&head, &tail , nodes);
             printGraph_cmd(head);
             scanf(" %c" , &ch);
+            
             printf("ch is: %c\n" , ch);
-            if(ch == 'n')
+            while (ch == 'n')
             {
+                ch = '\0';
                 printf("in if number 2\n");
 
                 scanf("%d" , &src);
@@ -58,6 +60,7 @@ int main()
                     printf("w is: %d\n" , w);
                     addEdge(head , src , dest , w);
                 }
+                scanf(" %c" , &ch);
             }
         }
     }
@@ -66,6 +69,8 @@ int main()
     {
         printf("error\n");
     }
+    printGraph_cmd(head);
+    deleteGraph_cmd(&head);
     printGraph_cmd(head);
 
     return 0;
