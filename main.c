@@ -24,6 +24,7 @@ int main()
     int dest = -1;
     int w = -1;
     int src = -1;
+    int v = -1;
 
     pnode head = NULL;
     pnode tail = NULL;
@@ -61,17 +62,28 @@ int main()
                     addEdge(head , src , dest , w);
                 }
                 scanf(" %c" , &ch);
+                
             }
+            printGraph_cmd(head);
+        }
+
+        if(ch == 'B')
+        {
+            scanf("%d" , &v);
+            insert_node_cmd(&head , v);
+            v = -1;
+        }
+
+        if(ch == 'D')
+        {
+            printGraph_cmd(head);
+            scanf("%d" , &v);
+            delete_node_cmd(&head , v);
+            v = -1;
         }
     }
 
-    if(head == NULL)
-    {
-        printf("error\n");
-    }
+    printf("############\n");
     printGraph_cmd(head);
-    deleteGraph_cmd(&head);
-    printGraph_cmd(head);
-
     return 0;
 }
