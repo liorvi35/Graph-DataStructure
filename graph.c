@@ -324,11 +324,122 @@ int shortsPath_cmd(pnode head, int n1, int n2)
     return -1;
 }
 
-void getNode(pnode head , pnode dest , int ver)
-{
-    pnode head_copy = head;
+//An auxiliary function that given an array and an index, it returns a copy of that array without the index
+int* copyArray(int *arr, int remove, int length){
+    int *copy = (int*)malloc(sizeof(int)*(length-1));
+    if(copy==NULL){
+        printf("No Memory");
+        exit(0);
+    }
+    int i,count=0;
+    for (i = 0; i < length; i++)
+    {
+        if(i!=remove){
+            copy[count] = arr[i];
+            count++;
+        }
+    }
+    return copy;
 
-
-
-    dest = head_copy;
 }
+
+//An auxiliary function to get the shortest path
+int min(int x,int y,int w){
+    if(x==-1 && y==-1)
+        return -1;
+    if(x==-1)
+        return y + w;
+    if(y==-1)
+        return x;
+    if(x<=(y+w))
+        return x;
+    return y+w;
+}
+
+//The opisite of placeCalc - calculate the node id by its positon in the graph
+int get_Id_by_Pos(pnode *head, int pos, int amount_of_Nodes){
+    int place = amount_of_Nodes-1;
+    int found = 0;
+    node *current = *head;
+    while (current!= NULL && found == 0){
+        if(place == pos)
+            found = 1;
+        else{
+            place--;
+            current = current -> next;
+        }
+    }
+    return current-> node_num;
+}
+
+//An auxiliary function used by dijkstra, will return -1 in case the node doesn't exist
+int placeCalc(pnode *head, int node_id,int amount_of_Nodes){
+    int place = amount_of_Nodes-1;
+    int found = 0;
+    node *current = *head;
+    while (current!= NULL && found == 0){
+        if(current -> node_num == node_id)
+            found = 1;
+        else{
+            place--;
+            current = current -> next;
+        }
+    }
+    return place;
+}
+
+//The main TSP function
+int TSP_cmd(pnode *head,int *cities, int length,int amount_of_Nodes){
+    int minDist = -1, i;
+    //Easy Cases
+    if(length == 0 || length == 1)
+        minDist = 0;
+    //Run the TSP algorithm
+    else{
+        for (i = 0; i < length; i++)
+        {
+            int *copy = copyArray(cities,i,length);
+            minDist = min(minDist,TSPalgorithm(head,copy,cities[i],length-1, amount_of_Nodes),0);
+        }
+    }
+    //Deallocate the memory of the array
+    free(cities);
+    return minDist;
+}
+
+// This function is the tsp algorithm
+int TSPalgorithm(pnode *head,int *cities,int start,int length,int amount_of_Nodes){
+    int res = -1,minDist = -1,i, path,tsp;
+    // Base Cases
+    if(length == 0)
+        res = 0;
+    else if(length == 1)
+        res =  shortsPath_cmd(*head,start,cities[0]);
+        //Recursive Tsp call on a smaller amount of cities
+    else{
+        for (i = 0; i < length; i++)
+        {
+            int *copy = copyArray(cities,i,length);
+            path = shortsPath_cmd(*head,start,cities[i]);
+            if(path != -1){
+                tsp = TSPalgorithm(head,copy,cities[i],length-1,amount_of_Nodes);
+                minDist = min(minDist, tsp,path);
+            }
+            else{
+                free(copy);
+            }
+
+        }
+        res = minDist;
+    }
+    //Deallocate the memory
+    free(cities);
+    return res;
+}
+
+
+
+
+
+
+
