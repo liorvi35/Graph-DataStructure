@@ -28,6 +28,7 @@ int main()
     int v = -1;
     int start = -1 , end = -1;
     int tsp = -1;
+    int* arr = NULL;
 
     pnode head = NULL;
     pnode tail = NULL;
@@ -37,12 +38,9 @@ int main()
         BACK:
         if(ch == 'A')
         {
-            printf("in if number 1\n");
             deleteGraph_cmd(&head);
             scanf("%d" , &nodes);
-            printf("nodes is: %d\n" , nodes);
             build_graph_cmd(&head, &tail , nodes);
-            printGraph_cmd(head);
         }
 
         if(ch == 'n')
@@ -51,25 +49,18 @@ int main()
             while (ch == 'n')
             {
                 ch = '\0';
-                printf("in if number 2\n");
-
                 scanf("%d" , &src);
-                printf("src is: %d\n" , src);
 
                 // 2 ints 
                 // char and int
 
                 while (scanf("%d" , &dest) == 1)
                 {
-                    printf("dest is: %d\n" , dest);
-                    printf("in while\n");
                     scanf("%d" , &w);
-                    printf("w is: %d\n" , w);
                     addEdge(head , src , dest , w);
                 }
                 scanf(" %c" , &ch);
             }
-            printGraph_cmd(head);
             goto BACK;
         }
 
@@ -82,7 +73,6 @@ int main()
 
         if(ch == 'D')
         {
-            printGraph_cmd(head);
             scanf("%d" , &v);
             delete_node_cmd(&head , v);
             v = -1;
@@ -92,24 +82,22 @@ int main()
         {
             scanf("%d" , &start);
             scanf("%d" , &end);
-            printf("Dijsktra shortest path: %d\n" ,shortsPath_cmd(head , start , end));
-
+            printf("Dijsktra shortest path: %d \n" ,shortsPath_cmd(head , start , end));
         }
 
         if(ch == 'T')
         {
             scanf("%d" , &tsp);
-            int* arr = (int*)calloc(tsp , sizeof(int));
+            arr = (int*)calloc(tsp , sizeof(int));
             for (int i = 0; i < tsp; i++)
             {
                 scanf("%d" , &arr[i]);
             }
-            
-            printf("TSP shortest path: %d\n" ,TSP_cmd(&head , arr , tsp ,tsp));
+            printf("TSP shortest path: %d \n" ,TSP_cmd(&head , arr , tsp));
         }
     }
-
-    printf("############\n");
     printGraph_cmd(head);
+    deleteGraph_cmd(&head);
+
     return 0;
 }
