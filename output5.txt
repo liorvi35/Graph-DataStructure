@@ -1,1 +1,0 @@
-Dijsktra shortest path: 9998 
