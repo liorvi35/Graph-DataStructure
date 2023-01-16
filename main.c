@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "graph.h"
 
 void printGraph_cmd(pnode head){
@@ -98,7 +99,13 @@ int main()
         if(ch == 'T')
         {
             scanf("%d" , &tsp);
-            //printf("TSP shortest path: %d\n" ,TSP_cmd(head , tsp));
+            int* arr = (int*)calloc(tsp , sizeof(int));
+            for (int i = 0; i < tsp; i++)
+            {
+                scanf("%d" , &arr[i]);
+            }
+            
+            printf("TSP shortest path: %d\n" ,TSP_cmd(&head , arr , tsp ,tsp));
         }
     }
 
