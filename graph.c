@@ -29,9 +29,11 @@ void build_graph_cmd(pnode *head, pnode *tail, int nodes)
 {
     int i = 0;
     pnode newTail = *head;
+    pnode newhead =NULL;
+    pnode newnode = NULL;
     if (nodes > 0)
     {
-        pnode newhead = (pnode)malloc(sizeof(node));
+        newhead = (pnode)malloc(sizeof(node));
         newhead->node_num = i++;
         newhead->next = *head;
         newhead->edges = NULL;
@@ -41,7 +43,7 @@ void build_graph_cmd(pnode *head, pnode *tail, int nodes)
 
         for (; i < nodes; i++)
         {
-            pnode newnode = (pnode)malloc(sizeof(node));
+            newnode = (pnode)malloc(sizeof(node));
             newnode->node_num = i;
             newnode->edges = NULL;
             newnode->next = NULL;
@@ -49,31 +51,22 @@ void build_graph_cmd(pnode *head, pnode *tail, int nodes)
             newTail = newnode;
         }
     }
-
     *tail = newTail;
 }
 
 void addEdge(pnode head, int src, int dest, int weight)
 {
-    printf("in add adge\n");
-    printf("head id is: %d\n", head->node_num);
     pnode src_node = head;
     while (src_node->node_num != src && src_node != NULL)
     {
         src_node = src_node->next;
     }
-    printf("src id is: %d\n", src_node->node_num);
-    printf("after while number 1\n");
 
-    printf("head id is: %d\n", head->node_num);
     pnode dest_node = head;
     while (dest_node->node_num != dest && dest_node != NULL)
     {
-        printf("dest id is: %d\n", dest_node->node_num);
         dest_node = dest_node->next;
     }
-    printf("dest id is: %d\n", dest_node->node_num);
-    printf("after while number 2\n");
 
     pedge n_edge = (pedge)malloc(sizeof(edge));
     n_edge->weight = weight;
@@ -85,14 +78,12 @@ void addEdge(pnode head, int src, int dest, int weight)
 
 void insert_node_cmd(pnode *head, int vertice)
 {
-    printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-    printf("ADD %d\n", vertice);
     pnode headNode = *head;
     pnode head_copy = *head;
     pedge currEdge = NULL, edgeTmp = NULL;
     int exist = 0, dest = -1, w = -1;
-
-    pnode newNode = (pnode)malloc(sizeof(node));
+    pnode newNode = NULL;
+    newNode = (pnode)malloc(sizeof(node));
     newNode->node_num = vertice;
     newNode->edges = NULL;
 
@@ -110,7 +101,6 @@ void insert_node_cmd(pnode *head, int vertice)
 
     if (exist)
     {
-        printf("exist!!\n");
         currEdge = headNode->edges;
         while (currEdge != NULL)
         {
@@ -122,12 +112,11 @@ void insert_node_cmd(pnode *head, int vertice)
 
         while (scanf("%d", &dest) == 1)
         {
-            printf("dest is: %d\n", dest);
-            printf("in while\n");
             scanf("%d", &w);
-            printf("w is: %d\n", w);
             addEdge(*head, vertice, dest, w);
         }
+        free(newNode);
+        newNode = NULL;
     }
     else
     {
@@ -144,15 +133,11 @@ void insert_node_cmd(pnode *head, int vertice)
 
         if(headNode != NULL)
         {
-            printf("stop here: %d\n" , headNode->node_num);
                 while(head_copy->next->node_num != headNode->node_num)
             {
                 head_copy = head_copy->next;
             }
         }
-
-
-
 
         if (headNode != NULL)
         {
@@ -160,10 +145,7 @@ void insert_node_cmd(pnode *head, int vertice)
             head_copy->next = newNode;
             while (scanf("%d", &dest) == 1)
             {
-                printf("dest is: %d\n", dest);
-                printf("in while\n");
                 scanf("%d", &w);
-                printf("w is: %d\n", w);
                 addEdge(*head, vertice, dest, w);
             }
         }
@@ -178,10 +160,7 @@ void insert_node_cmd(pnode *head, int vertice)
             newNode->next = NULL;
             while (scanf("%d", &dest) == 1)
             {
-                printf("dest is: %d\n", dest);
-                printf("in while\n");
                 scanf("%d", &w);
-                printf("w is: %d\n", w);
                 addEdge(*head, vertice, dest, w);
             }
         }
@@ -191,8 +170,8 @@ void insert_node_cmd(pnode *head, int vertice)
 void delete_node_cmd(pnode *head, int vertice)
 {
     delete_edges(head, vertice);
-    node *current = *head;
-    node **prev = head;
+    pnode current = *head;
+    pnode *prev = head;
     int found = 0;
     while (current != NULL && found == 0)
     {
@@ -210,8 +189,11 @@ void delete_node_cmd(pnode *head, int vertice)
     if (current != NULL)
     {
         while (current->edges != NULL)
+        {
             removeFirstEdge(current);
+        }
         free(current);
+        current = NULL;
     }
 }
 
@@ -227,8 +209,8 @@ void delete_edges(pnode *head, int ver)
 
 void removeEdge(pnode node, int vertice)
 {
-    edge *newEdge = (node->edges);
-    edge **prev = &(node->edges);
+    pedge newEdge = (node->edges);
+    pedge *prev = &(node->edges);
     int found = 0;
     while (newEdge != NULL && found == 0)
     {
@@ -324,122 +306,88 @@ int shortsPath_cmd(pnode head, int n1, int n2)
     return -1;
 }
 
-//An auxiliary function that given an array and an index, it returns a copy of that array without the index
-int* copyArray(int *arr, int remove, int length){
-    int *copy = (int*)malloc(sizeof(int)*(length-1));
-    if(copy==NULL){
-        printf("No Memory");
-        exit(0);
-    }
-    int i,count=0;
-    for (i = 0; i < length; i++)
+int* deepcopy(int *arr, int index , int size)
+{
+    int i = 0 , j = 0;
+    int *arrcopy = (int*)calloc(size -1 , sizeof(int));
+    if(arrcopy == 0)
     {
-        if(i!=remove){
-            copy[count] = arr[i];
-            count++;
-        }
+        perror("calloc failed");
+        free(arrcopy);
+        arrcopy = NULL;
+        exit(EXIT_FAILURE);
     }
-    return copy;
-
-}
-
-//An auxiliary function to get the shortest path
-int min(int x,int y,int w){
-    if(x==-1 && y==-1)
-        return -1;
-    if(x==-1)
-        return y + w;
-    if(y==-1)
-        return x;
-    if(x<=(y+w))
-        return x;
-    return y+w;
-}
-
-//The opisite of placeCalc - calculate the node id by its positon in the graph
-int get_Id_by_Pos(pnode *head, int pos, int amount_of_Nodes){
-    int place = amount_of_Nodes-1;
-    int found = 0;
-    node *current = *head;
-    while (current!= NULL && found == 0){
-        if(place == pos)
-            found = 1;
-        else{
-            place--;
-            current = current -> next;
-        }
-    }
-    return current-> node_num;
-}
-
-//An auxiliary function used by dijkstra, will return -1 in case the node doesn't exist
-int placeCalc(pnode *head, int node_id,int amount_of_Nodes){
-    int place = amount_of_Nodes-1;
-    int found = 0;
-    node *current = *head;
-    while (current!= NULL && found == 0){
-        if(current -> node_num == node_id)
-            found = 1;
-        else{
-            place--;
-            current = current -> next;
-        }
-    }
-    return place;
-}
-
-//The main TSP function
-int TSP_cmd(pnode *head,int *cities, int length,int amount_of_Nodes){
-    int minDist = -1, i;
-    //Easy Cases
-    if(length == 0 || length == 1)
-        minDist = 0;
-    //Run the TSP algorithm
-    else{
-        for (i = 0; i < length; i++)
+    while(i<size)
+    {
+        if(i == index)
         {
-            int *copy = copyArray(cities,i,length);
-            minDist = min(minDist,TSPalgorithm(head,copy,cities[i],length-1, amount_of_Nodes),0);
+            i++;
+            continue;
+        }
+        else
+        {
+            arrcopy[j++] = arr[i++];
         }
     }
-    //Deallocate the memory of the array
-    free(cities);
-    return minDist;
+    return arrcopy;
 }
 
-// This function is the tsp algorithm
-int TSPalgorithm(pnode *head,int *cities,int start,int length,int amount_of_Nodes){
-    int res = -1,minDist = -1,i, path,tsp;
-    // Base Cases
-    if(length == 0)
+int getMin(int a , int b , int c)
+{
+    int min = -1;
+    if(a == min && b == min)
+        return min;
+    if(a == min && b != min)
+        return b + c;
+    if(a != min && b == min)
+        return a;
+    if(a>b+c)
+        return b + c;
+    return a;
+}
+
+int TSP_cmd(pnode *head,int *nodes, int size){
+    int distance = -1;
+    int i = -1;
+    int *copy = NULL;
+    if(size == 0 || size == 1)
+    {
+        distance = 0;
+    }   
+    else
+    {
+        for (i = 0; i < size; i++)
+        {
+            copy = deepcopy(nodes,i,size);
+            distance = getMin(distance,TSPalgorithm(head,copy,nodes[i],size-1),0);
+        }
+    }
+    free(nodes);
+    nodes = NULL;
+    return distance;
+}
+
+int TSPalgorithm(pnode *head,int *nodes,int start,int size){
+    int res = -1,distance = -1,i, path,tsp;
+    if(size == 0)
         res = 0;
-    else if(length == 1)
-        res =  shortsPath_cmd(*head,start,cities[0]);
-        //Recursive Tsp call on a smaller amount of cities
+    else if(size == 1)
+        res =  shortsPath_cmd(*head,start,nodes[0]);
     else{
-        for (i = 0; i < length; i++)
+        for (i = 0; i < size; i++)
         {
-            int *copy = copyArray(cities,i,length);
-            path = shortsPath_cmd(*head,start,cities[i]);
+            int *copy = deepcopy(nodes,i,size);
+            path = shortsPath_cmd(*head,start,nodes[i]);
             if(path != -1){
-                tsp = TSPalgorithm(head,copy,cities[i],length-1,amount_of_Nodes);
-                minDist = min(minDist, tsp,path);
+                tsp = TSPalgorithm(head,copy,nodes[i],size-1);
+                distance = getMin(distance, tsp,path);
             }
             else{
                 free(copy);
             }
-
         }
-        res = minDist;
+        res = distance;
     }
-    //Deallocate the memory
-    free(cities);
+    free(nodes);
     return res;
 }
-
-
-
-
-
-
-
