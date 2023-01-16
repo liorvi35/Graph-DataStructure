@@ -24,12 +24,13 @@ void delete_node_cmd(pnode *head , int vertice);
 void printGraph_cmd(pnode head); //for self debug
 void deleteGraph_cmd(pnode* head);
 int shortsPath_cmd(pnode head, int n1, int n2);
-int TSP_cmd(pnode head, int size);
+int TSP_cmd(pnode *head,int *cities, int length,int amount_of_Nodes);
 
 void addEdge(pnode head , int src , int dest , int weight);
 void delete_edges(pnode *head , int ver);
 void removeEdge(pnode node,int node_id);
 void removeFirstEdge(pnode node);
+int TSPalgorithm(pnode *head,int *cities,int start,int length,int amount_of_Nodes);
 
 
 
