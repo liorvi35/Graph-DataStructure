@@ -25,12 +25,15 @@ int main()
     int w = -1;
     int src = -1;
     int v = -1;
+    int start = -1 , end = -1;
+    int tsp = -1;
 
     pnode head = NULL;
     pnode tail = NULL;
 
     while(scanf("%c" , &ch) != EOF)
     {
+        BACK:
         if(ch == 'A')
         {
             printf("in if number 1\n");
@@ -39,9 +42,11 @@ int main()
             printf("nodes is: %d\n" , nodes);
             build_graph_cmd(&head, &tail , nodes);
             printGraph_cmd(head);
-            scanf(" %c" , &ch);
-            
-            printf("ch is: %c\n" , ch);
+        }
+
+        if(ch == 'n')
+        {
+                        
             while (ch == 'n')
             {
                 ch = '\0';
@@ -62,9 +67,9 @@ int main()
                     addEdge(head , src , dest , w);
                 }
                 scanf(" %c" , &ch);
-                
             }
             printGraph_cmd(head);
+            goto BACK;
         }
 
         if(ch == 'B')
@@ -80,6 +85,20 @@ int main()
             scanf("%d" , &v);
             delete_node_cmd(&head , v);
             v = -1;
+        }
+
+        if(ch == 'S')
+        {
+            scanf("%d" , &start);
+            scanf("%d" , &end);
+            printf("Dijsktra shortest path: %d\n" ,shortsPath_cmd(head , start , end));
+
+        }
+
+        if(ch == 'T')
+        {
+            scanf("%d" , &tsp);
+            //printf("TSP shortest path: %d\n" ,TSP_cmd(head , tsp));
         }
     }
 
