@@ -1,18 +1,26 @@
+# This file contains the `make` for graph program
+# authors: Lior Vinman & Yoad Tamar
+
+
 CC = gcc
-FLAGS = -Wall -g
+CFLAGS = -Wall -g
+TARGETS = graph
 
-.PHONY: all clean
+.PHONY: default all clean
 
-all: graph
+default: all
+
+all: $(TARGETS)
 
 graph: graph.o main.o
-	$(CC) $(FLAGS) -o graph graph.o main.o
+	$(CC) $(CFLAGS) -o $@ $^
 
 graph.o: graph.c graph.h
-	$(CC) $(FLAGS) -c graph.c graph.h
+	$(CC) $(CFLAGS) -c $^
 
 main.o: main.c graph.h
-	$(CC) $(FLAGS) -c main.c graph.h
+	$(CC) $(CFLAGS) -c $^
 
 clean:
-	rm -f *.o *.h.gch graph
+	rm -f *.o *.h.gch $(TARGETS)
+	
