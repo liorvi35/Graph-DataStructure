@@ -86,12 +86,6 @@
 	void delete_node_cmd(pnode*, int);
 
     /**
-     * @brief Prints the graph command by displaying each node and its connected edges.
-     * @param pnode Pointer to the head of the graph.
-     */
-	void printGraph_cmd(pnode);
-
-    /**
      * @brief Deletes the entire graph command by removing all nodes and edges.
      * @param pnode* Pointer to the head of the graph.
      */
