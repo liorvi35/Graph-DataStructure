@@ -170,6 +170,6 @@
      * @param int Third vertex.
      * @return The shortest path.
      */
-    int getMin(int, int, int)
+    int getMin(int, int, int);
 
 #endif
